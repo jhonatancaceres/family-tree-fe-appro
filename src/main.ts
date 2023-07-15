@@ -8,14 +8,22 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { Contact, FamilyTree } from './type';
+import { Contact, FamilyTree, Node } from './type';
 
 @Component({
   selector: 'my-app',
   standalone: true,
   imports: [CommonModule],
   template: `
+  <div class="bar">
+    Nodes: 
     <button (click)="addNode()">Add</button>
+    &nbsp;<select ><option *ngFor="let node of tree?.nodes">{{node.contact.name}}</option></select><br/>
+    Edges: 
+    From: <select (change)="changeNode($event,'S')"><option *ngFor="let node of tree?.nodes" value="{{node.id}}">{{node.contact.name}}</option></select>
+    To: <select #targetNode ><option *ngFor="let node of tree?.nodes" value="{{node.id}}">{{node.contact.name}}</option></select>
+    &nbsp;<button (click)="addEdge()">Add</button>
+    </div>
     <div class="tree-container" #treeContainer>
 
     </div>
@@ -26,6 +34,11 @@ export class App implements OnInit {
 
   @ViewChild('treeContainer', { static: true })
   treeContainer?: ElementRef;
+
+  @ViewChild('sourceNode', { static: true })
+  sourceNode?: ElementRef;
+  @ViewChild('targetNode', { static: true })
+  targetNode?: ElementRef;
 
   constructor(private renderer: Renderer2) {}
 
@@ -65,8 +78,21 @@ export class App implements OnInit {
   }
   renderEdges() {}
   addNode() {
-    this.tree?.nodes.push({ id: 1040, contact: { id: 1050, name: 'Jisus' } });
+    this.tree?.nodes.push({
+      id: this.tree?.nodes.length + 1,
+      contact: {
+        id: this.tree?.nodes.length + 1,
+        name: 'Item #' + (this.tree?.nodes.length + 1),
+      },
+    });
     this.renderNodes();
+  }
+
+  addEdge() {
+    console.log(this.sourceNode?.nativeElement);
+  }
+  changeNode(item: any, type: string) {
+    console.log(item, type);
   }
 }
 

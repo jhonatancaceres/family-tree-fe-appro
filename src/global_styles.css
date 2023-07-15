@@ -1,4 +1,7 @@
 /* Add application styles & imports to this file! */
+.bar {
+  padding: 5px;;
+}
 .tree-container {
   border: 5px dotted red;
   background-color: #ccc;
